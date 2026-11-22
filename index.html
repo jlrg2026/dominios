@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gestión de dominios</title>
+<style>
+:root{--bg:#f3f5f9;--sf:#fff;--sf2:#f7f9fc;--ink:#0f1b2d;--mute:#64748b;--line:#e3e8f0;--ac:#0e8f8a;--acs:#e0f5f3;--ok:#12a150;--okb:#e4f6ec;--wn:#c77700;--wnb:#fff3dc;--er:#d93a3a;--erb:#fde8e8;--gr:#64748b;--grb:#eef1f5;--sh:0 1px 2px rgba(15,27,45,.06),0 10px 28px rgba(15,27,45,.07)}
+[data-theme=dark]{--bg:#0b1220;--sf:#131c2e;--sf2:#18233a;--ink:#e8eef8;--mute:#8da0bb;--line:#243049;--ac:#2dd4bf;--acs:#0f3330;--ok:#37d67a;--okb:#12301f;--wn:#ffb84d;--wnb:#3a2a0e;--er:#ff6b6b;--erb:#3b1517;--gr:#8da0bb;--grb:#1d283d;--sh:none}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 "Segoe UI",system-ui,-apple-system,sans-serif;transition:background .25s,color .25s}
+button,input,select,textarea{font:inherit;color:inherit}
+small{display:block;color:var(--mute);font-size:12px}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.top{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:16px;padding:12px 28px;background:var(--sf);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;letter-spacing:-.01em}
+.mark{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--ac),#5fd6c8);display:grid;place-items:center;color:#fff;font-size:16px}
+nav{display:flex;gap:4px;margin-left:12px}
+nav button{border:0;background:none;padding:8px 14px;border-radius:8px;cursor:pointer;color:var(--mute);font-weight:600}
+nav button.on{background:var(--acs);color:var(--ac)}
+.sp{flex:1}
+.btn{border:1px solid var(--line);background:var(--sf);border-radius:9px;padding:8px 14px;cursor:pointer;font-weight:600}
+.btn:hover{background:var(--sf2)}
+.btn.p{background:var(--ac);border-color:var(--ac);color:#fff}.btn.p:hover{filter:brightness(1.08)}
+.ic{width:38px;height:38px;padding:0;display:grid;place-items:center}
+.sync{font-size:12px;color:var(--mute);display:flex;align-items:center;gap:6px}
+.sync i{width:8px;height:8px;border-radius:50%;background:var(--wn)}.sync.live i{background:var(--ok)}
+main{max-width:1240px;margin:0 auto;padding:26px 28px 60px}
+.view{display:none}.view.on{display:block}
+h1{font-size:24px;letter-spacing:-.02em;margin:0 0 4px}.lead{color:var(--mute);margin:0 0 22px}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:18px}
+.k{background:var(--sf);border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:var(--sh)}
+.k span{font-size:12.5px;color:var(--mute);font-weight:600}.k b{display:block;font-size:27px;letter-spacing:-.02em;margin-top:4px}
+.k.er b{color:var(--er)}.k.wn b{color:var(--wn)}.k.ac b{color:var(--ac)}
+.g2{display:grid;grid-template-columns:1.35fr 1fr;gap:18px;margin-bottom:18px}
+.card{background:var(--sf);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--sh)}
+.card h3{margin:0 0 14px;font-size:15px}
+.it{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+.it:first-of-type{border-top:0}.it b{font-weight:600}
+.chip{display:inline-block;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:700;white-space:nowrap}
+.chip.ok{background:var(--okb);color:var(--ok)}.chip.wn{background:var(--wnb);color:var(--wn)}.chip.er{background:var(--erb);color:var(--er)}.chip.gr{background:var(--grb);color:var(--gr)}
+.don{display:flex;align-items:center;gap:22px}
+.ring{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;flex:none}
+.ring div{width:96px;height:96px;border-radius:50%;background:var(--sf);display:grid;place-items:center;text-align:center;font-size:12px;color:var(--mute)}
+.ring b{display:block;font-size:26px;color:var(--ink);line-height:1}
+.lg{display:grid;gap:8px;font-size:13.5px}.lg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:8px}
+.bar{display:grid;grid-template-columns:110px 1fr 90px;align-items:center;gap:10px;padding:6px 0;font-size:13.5px}
+.bar u{display:block;height:9px;border-radius:9px;background:var(--ac);text-decoration:none}
+.bar span:last-child{text-align:right;color:var(--mute)}
+.fb{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+label{display:grid;gap:5px;font-size:12.5px;font-weight:600;color:var(--mute)}
+input,select,textarea{border:1px solid var(--line);background:var(--sf);border-radius:9px;padding:8px 10px;width:100%}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--sf);box-shadow:var(--sh)}
+table{width:100%;border-collapse:collapse;min-width:900px}
+th{text-align:left;font-size:12px;color:var(--mute);padding:12px 14px;background:var(--sf2);border-bottom:1px solid var(--line)}
+td{padding:12px 14px;border-top:1px solid var(--line);vertical-align:top}
+tr:hover td{background:var(--sf2)}.r{text-align:right}td.empty{text-align:center;color:var(--mute);padding:40px}
+.use{height:6px;border-radius:6px;background:var(--grb);margin-bottom:4px;min-width:90px}.use i{display:block;height:100%;border-radius:6px;background:var(--ac)}.use.over i{background:var(--er)}
+.act{white-space:nowrap}.act button{border:0;background:none;cursor:pointer;font-size:16px;padding:4px 6px;border-radius:6px}.act button:hover{background:var(--grb)}
+.foot{margin-top:10px;color:var(--mute);font-size:13px}
+.cols{display:flex;flex-wrap:wrap;gap:8px}.cols label{display:flex;align-items:center;gap:6px;font-weight:500;color:var(--ink);background:var(--sf2);border:1px solid var(--line);border-radius:8px;padding:6px 10px}
+.cols input{width:auto}
+.pre{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 16px}
+dialog{border:0;border-radius:18px;padding:0;background:var(--sf);color:var(--ink);width:min(680px,94vw);box-shadow:0 30px 80px rgba(0,0,0,.35)}
+dialog::backdrop{background:rgba(8,14,26,.55)}
+dialog form{padding:24px}.fg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}.fg .w{grid-column:1/-1}
+.ft{display:flex;justify-content:flex-end;gap:10px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,30px);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:10px;opacity:0;transition:.3s;z-index:20;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media(max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.g2{grid-template-columns:1fr}.top{flex-wrap:wrap;padding:10px 16px}nav{order:5;width:100%;margin:0}main{padding:18px 14px 50px}.fg{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><div class="mark">🌐</div>Dominios</div>
+  <nav>
+    <button class="on" data-v="vd">Dashboard</button>
+    <button data-v="vl">Dominios</button>
+    <button data-v="vr">Reportes</button>
+  </nav>
+  <div class="sp"></div>
+  <div class="sync" id="sync"><i></i><span>Modo demo</span></div>
+  <button class="btn ic" id="cfg" title="Conectar Google Sheets" aria-label="Configuración">⚙</button>
+  <button class="btn ic" id="th" title="Cambiar a modo día/noche" aria-label="Modo día/noche">🌙</button>
+  <button class="btn p" id="new">+ Nuevo dominio</button>
+</header>
+<main>
+  <section class="view on" id="vd">
+    <h1>Panel de control</h1><p class="lead">Vencimientos, pagos pendientes y costo de tus dominios.</p>
+    <div class="kpis" id="kp"></div>
+    <div class="g2">
+      <div class="card"><h3>Próximos vencimientos y vencidos</h3><div id="pv"></div></div>
+      <div class="card"><h3>Estado de los dominios</h3><div class="don" id="dn"></div></div>
+    </div>
+    <div class="g2">
+      <div class="card"><h3>Costo por registrador</h3><div id="bp"></div></div>
+      <div class="card"><h3>Renovaciones de los próximos 6 meses</h3><div id="pm"></div></div>
+    </div>
+    <div class="card"><h3>Atención requerida</h3><div id="rs"></div></div>
+  </section>
+  <section class="view" id="vl">
+    <h1>Dominios</h1><p class="lead">Busca, filtra y administra cada dominio.</p>
+    <div class="fb" id="tf"></div>
+    <div class="tw"><table>
+      <thead><tr><th>Dominio</th><th>Registrador</th><th>Cant.</th><th class="r">Costo total (USD)</th><th>Vencimiento</th><th>Pago</th><th>Renueva</th><th>Estado</th><th></th></tr></thead>
+      <tbody id="tb"></tbody></table></div>
+    <div class="foot" id="tc"></div>
+  </section>
+  <section class="view" id="vr">
+    <h1>Reportes</h1><p class="lead">Combina filtros, fechas, agrupación y columnas; descarga en PDF o CSV.</p>
+    <div class="card">
+      <h3>1. Filtros</h3>
+      <div class="pre"><button class="btn" data-p="-1">Vencidos</button><button class="btn" data-p="30">Vencen en 30 días</button><button class="btn" data-p="60">60 días</button><button class="btn" data-p="90">90 días</button><button class="btn" data-p="pend">Pago pendiente</button><button class="btn" data-p="x">Limpiar</button></div>
+      <div class="fb" id="rf"></div>
+      <h3>2. Presentación</h3>
+      <div class="fb">
+        <label>Título del reporte<input id="rt" value="Reporte de dominios"></label>
+        <label>Agrupar por<select id="rg"><option value="">Sin agrupar</option><option value="registrador">Registrador</option><option value="depto">Departamento</option><option value="estado">Estado</option><option value="pago">Pago</option><option value="renueva">Renovación automática</option><option value="ext">Extensión</option></select></label>
+        <label>Orientación<select id="ro"><option value="landscape">Horizontal</option><option value="portrait">Vertical</option></select></label>
+      </div>
+      <h3>3. Columnas</h3><div class="cols" id="rc"></div>
+      <div class="foot" id="rn" style="margin:16px 0"></div>
+      <button class="btn p" id="pdf">Descargar PDF</button> <button class="btn" id="csv">Exportar CSV</button>
+    </div>
+  </section>
+</main>
+<dialog id="dl"><form method="dialog" id="fm">
+  <h2 style="margin:0" id="dt">Nuevo dominio</h2>
+  <div class="fg">
+    <label class="w">Nombre de dominio *<input name="dominio" required placeholder="empresa.com"></label>
+    <label>Registrador<input name="registrador" list="lp" placeholder="GoDaddy, Namecheap…"></label>
+    <label>DNS / Hosting<input name="dns" placeholder="Cloudflare, AWS…"></label>
+    <label>Cantidad<input name="cantidad" type="number" min="0" value="1"></label>
+    <label>Costo unitario (USD)<input name="costo" type="number" min="0" step="0.01" value="0"></label>
+    <label>Fecha de registro<input name="registro" type="date"></label>
+    <label>Fecha de vencimiento<input name="vence" type="date"></label>
+    <label>Renovación automática<select name="renueva"><option>No</option><option>Sí</option></select></label>
+    <label>Estado de pago<select name="pago"><option>Pagado</option><option>Pendiente</option></select></label>
+    <label>Departamento<select name="depto"></select></label>
+    <label>Responsable<input name="responsable"></label>
+    <label class="w">Notas<textarea name="notas" rows="2"></textarea></label>
+  </div>
+  <datalist id="lp"></datalist>
+  <div class="ft"><button type="button" class="btn" id="cx">Cancelar</button><button type="submit" class="btn p" id="sv">Guardar</button></div>
+</form></dialog>
+<dialog id="ds"><form method="dialog">
+  <h2 style="margin:0">Conectar Google Sheets</h2>
+  <p class="lead" style="margin:8px 0 14px">Pega la URL de tu Apps Script publicada como aplicación web (termina en <code>/exec</code>). Sin URL, la app usa datos de demostración guardados solo en este navegador.</p>
+  <label>URL del Apps Script<input id="au" placeholder="https://script.google.com/macros/s/.../exec"></label>
+  <div class="ft" style="margin-top:18px"><button type="button" class="btn" id="cx2">Cerrar</button><button type="button" class="btn p" id="sa">Guardar y recargar</button></div>
+</form></dialog>
+<div class="toast" id="ts"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+<script>
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const ESTADOS=['Vigente','Por vencer','Vencido','Sin fecha'];
+const DEPTOS=['Administración','Digital','Dirección General','Dirección Médica','Dirección Mercadotecnia','Finanzas','IT','Logística','Mercadotecnia','Recursos Humanos','Ventas'];
+const CL={'Vencido':'er','Por vencer':'wn','Vigente':'ok','Sin fecha':'gr','Pagado':'ok','Pendiente':'wn'};
+const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',currencyDisplay:'code'}).format(+n||0).replace(/\u00a0/g,' ');
+const fd=s=>s?new Date(s+'T00:00:00').toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'}):'—';
+const today=(()=>{const d=new Date();d.setHours(0,0,0,0);return d})();
+const iso=d=>new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+const add=n=>{const d=new Date(today);d.setDate(d.getDate()+n);return iso(d)};
+const dias=l=>l.vence?Math.round((new Date(l.vence+'T00:00:00')-today)/864e5):null;
+const estado=l=>{const d=dias(l);return d===null?'Sin fecha':d<0?'Vencido':d<=90?'Por vencer':'Vigente'};
+const tot=l=>(+l.cantidad||0)*(+l.costo||0);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ext=l=>{const p=(l.dominio||'').toLowerCase().split('.');if(p.length<2)return'';const u=p[p.length-1],m=p[p.length-2];return p.length>2&&u.length===2&&['com','org','net','gob','edu'].includes(m)?'.'+m+'.'+u:'.'+u};
+const uniq=k=>[...new Set(DATA.map(l=>l[k]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
+const optsD=()=>[...new Set([...DEPTOS,...DATA.map(l=>l.depto).filter(Boolean)])].sort((a,b)=>a.localeCompare(b,'es'));
+let DATA=[],editId=null;
+
+/* ---------- Datos: Google Sheets (Apps Script) o demo local ---------- */
+const API=()=>localStorage.getItem('dom_api')||'';
+function seed(){return[
+ {id:'d1',dominio:'empresa.com',registrador:'GoDaddy',dns:'Cloudflare',cantidad:1,costo:22,registro:add(-700),vence:add(18),renueva:'No',pago:'Pendiente',depto:'IT',responsable:'Soporte IT',notas:'Dominio principal'},
+ {id:'d2',dominio:'empresa.com.mx',registrador:'GoDaddy',dns:'Cloudflare',cantidad:1,costo:18,registro:add(-500),vence:add(75),renueva:'Sí',pago:'Pagado',depto:'IT',responsable:'Soporte IT',notas:''},
+ {id:'d3',dominio:'tienda-empresa.com',registrador:'Namecheap',dns:'AWS Route 53',cantidad:1,costo:15,registro:add(-380),vence:add(-6),renueva:'No',pago:'Pendiente',depto:'Ventas',responsable:'Ana R.',notas:'Renovar ya'},
+ {id:'d4',dominio:'empresa.mx',registrador:'NIC México',dns:'Cloudflare',cantidad:2,costo:24,registro:add(-200),vence:add(160),renueva:'Sí',pago:'Pagado',depto:'Digital',responsable:'Marco T.',notas:''},
+ {id:'d5',dominio:'campana-salud.com',registrador:'Namecheap',dns:'Cloudflare',cantidad:1,costo:14,registro:add(-335),vence:add(29),renueva:'No',pago:'Pagado',depto:'Mercadotecnia',responsable:'Lucía P.',notas:''},
+ {id:'d6',dominio:'empresa.org',registrador:'GoDaddy',dns:'GoDaddy',cantidad:1,costo:20,registro:add(-90),vence:add(275),renueva:'Sí',pago:'Pagado',depto:'Dirección General',responsable:'Soporte IT',notas:''}]}
+function demo(a,d){let L=JSON.parse(localStorage.getItem('dom_demo')||'null')||seed();
+ if(a==='create'){d.id='d'+Date.now();L.push(d)}else if(a==='update')L=L.map(x=>x.id===d.id?d:x);else if(a==='delete')L=L.filter(x=>x.id!==d.id);
+ localStorage.setItem('dom_demo',JSON.stringify(L));return a==='list'?L:{ok:true}}
+async function call(a,d){
+ if(!API())return demo(a,d);
+ if(a==='list'){const r=await (await fetch(API()+'?action=list')).json();if(!r.ok)throw Error(r.error);return r.data}
+ const r=await (await fetch(API(),{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:a,data:d})})).json();
+ if(!r.ok)throw Error(r.error);return r}
+const norm=l=>({...l,dominio:String(l.dominio||'').trim().toLowerCase(),cantidad:+l.cantidad||0,costo:+l.costo||0,registro:String(l.registro||'').slice(0,10),vence:String(l.vence||'').slice(0,10),pago:l.pago||'Pagado',renueva:l.renueva||'No'});
+async function load(){try{DATA=(await call('list')).map(norm)}catch(e){toast('No se pudo leer la hoja: '+e.message);DATA=[]}
+ fillSel();render()}
+function toast(m){const t=$('#ts');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),3200)}
+
+/* ---------- Filtros ---------- */
+const op=a=>a.map(x=>`<option>${esc(x)}</option>`).join('');
+function mkF(el,full){el.innerHTML=`<label>Buscar<input name="q" type="search" placeholder="Dominio, registrador…"></label>
+<label>Registrador<select name="registrador"></select></label><label>Departamento<select name="depto"></select></label>
+<label>Estado<select name="estado"><option value="">Todos</option>${op(ESTADOS)}</select></label>
+<label>Pago<select name="pago"><option value="">Todos</option>${op(['Pagado','Pendiente'])}</select></label>
+<label>Renovación automática<select name="renueva"><option value="">Todas</option>${op(['Sí','No'])}</select></label>
+<label>Extensión<select name="ext"></select></label>
+<label>Vence desde<input name="vDesde" type="date"></label><label>Vence hasta<input name="vHasta" type="date"></label>
+${full?'<label>Registro desde<input name="rDesde" type="date"></label><label>Registro hasta<input name="rHasta" type="date"></label>':''}
+<label>Ordenar por<select name="orden"><option value="vence">Vencimiento</option><option value="dominio">Dominio</option><option value="total">Costo total</option><option value="registro">Fecha de registro</option></select></label>`}
+const vals=el=>Object.fromEntries($$('[name]',el).map(i=>[i.name,i.value]));
+const ORD={vence:(a,b)=>(dias(a)??1e9)-(dias(b)??1e9),dominio:(a,b)=>a.dominio.localeCompare(b.dominio),total:(a,b)=>tot(b)-tot(a),registro:(a,b)=>(b.registro||'').localeCompare(a.registro||'')};
+const filtrar=o=>DATA.filter(l=>{const q=(o.q||'').toLowerCase();
+ return(!q||[l.dominio,l.registrador,l.dns,l.responsable,l.depto,l.notas].join(' ').toLowerCase().includes(q))
+ &&(!o.registrador||l.registrador===o.registrador)&&(!o.depto||l.depto===o.depto)&&(!o.estado||estado(l)===o.estado)&&(!o.pago||l.pago===o.pago)&&(!o.renueva||l.renueva===o.renueva)&&(!o.ext||ext(l)===o.ext)
+ &&(!o.vDesde||(l.vence&&l.vence>=o.vDesde))&&(!o.vHasta||(l.vence&&l.vence<=o.vHasta))
+ &&(!o.rDesde||(l.registro&&l.registro>=o.rDesde))&&(!o.rHasta||(l.registro&&l.registro<=o.rHasta))}).sort(ORD[o.orden||'vence']);
+function fillSel(){const src={registrador:()=>uniq('registrador'),depto:optsD,ext:()=>[...new Set(DATA.map(ext).filter(Boolean))].sort()};
+ Object.keys(src).forEach(k=>$$(`select[name=${k}]`).forEach(s=>{const v=s.value;
+  s.innerHTML=`<option value="">${s.closest('dialog')?'Selecciona…':'Todos'}</option>`+op(src[k]());s.value=v}));
+ $('#lp').innerHTML=uniq('registrador').map(x=>`<option value="${esc(x)}">`).join('')}
+
+/* ---------- Render ---------- */
+function render(){dash();tabla();conteo()}
+const venceTxt=d=>d<0?'Venció hace '+(-d)+' d':d===0?'Vence hoy':'En '+d+' días';
+function dash(){const L=DATA,n=x=>L.filter(l=>{const d=dias(l);return d!==null&&d>=0&&d<=x}).length,pend=L.filter(l=>l.pago==='Pendiente');
+ $('#kp').innerHTML=[['Dominios registrados',L.length,'ac'],['Costo anual total',money(L.reduce((s,l)=>s+tot(l),0)),''],['Vencen en 30 días',n(30),'wn'],['Vencidos',L.filter(l=>estado(l)==='Vencido').length,'er'],['Pagos pendientes ('+pend.length+')',money(pend.reduce((s,l)=>s+tot(l),0)),'wn']]
+  .map(([a,b,c])=>`<div class="k ${c}"><span>${a}</span><b>${b}</b></div>`).join('');
+ const pr=L.filter(l=>{const d=dias(l);return d!==null&&d<=90}).sort(ORD.vence).slice(0,8);
+ $('#pv').innerHTML=pr.map(l=>{const d=dias(l);return`<div class="it"><div><b>${esc(l.dominio)}</b> <small>${esc(l.registrador)} · ${fd(l.vence)} · ${money(tot(l))}${l.pago==='Pendiente'?' · pago pendiente':''}</small></div><span class="chip ${d<=30?'er':'wn'}">${venceTxt(d)}</span></div>`}).join('')||'<small>Nada vence en los próximos 90 días.</small>';
+ const cnt=ESTADOS.map(e=>L.filter(l=>estado(l)===e).length);let acc=0;
+ const g=cnt.map((c,i)=>{const a=acc/(L.length||1)*100;acc+=c;return`var(--${CL[ESTADOS[i]]}) ${a}% ${acc/(L.length||1)*100}%`}).join(',');
+ $('#dn').innerHTML=`<div class="ring" style="background:conic-gradient(${L.length?g:'var(--grb) 0 100%'})"><div><span><b>${L.length}</b>dominios</span></div></div><div class="lg">${ESTADOS.map((e,i)=>`<div><i style="background:var(--${CL[e]})"></i>${e}: <b>${cnt[i]}</b></div>`).join('')}</div>`;
+ const rg={};L.forEach(l=>rg[l.registrador||'Sin registrador']=(rg[l.registrador||'Sin registrador']||0)+tot(l));
+ const bp=Object.entries(rg).sort((a,b)=>b[1]-a[1]).slice(0,6),mx=bp[0]?bp[0][1]||1:1;
+ $('#bp').innerHTML=bp.map(([k,v])=>`<div class="bar"><span>${esc(k)}</span><u style="width:${Math.max(3,v/mx*100)}%"></u><span>${money(v)}</span></div>`).join('')||'<small>Sin datos.</small>';
+ const ms=[...Array(6)].map((_,i)=>{const f=new Date(today.getFullYear(),today.getMonth()+i,1),k=iso(f).slice(0,7),m=L.filter(l=>l.vence.slice(0,7)===k);
+  return[f.toLocaleDateString('es-MX',{month:'short',year:'2-digit'}),m.reduce((s,l)=>s+tot(l),0),m.length]}),mm=Math.max(1,...ms.map(x=>x[1]));
+ $('#pm').innerHTML=ms.map(([a,v,c])=>`<div class="bar"><span>${a}</span><u style="width:${v?Math.max(3,v/mm*100):0}%"></u><span>${c?money(v):'—'}</span></div>`).join('');
+ const rs=L.filter(l=>{const d=dias(l);return l.pago==='Pendiente'||(l.renueva!=='Sí'&&d!==null&&d<=60)}).sort(ORD.vence).slice(0,8);
+ $('#rs').innerHTML=rs.map(l=>{const d=dias(l);return`<div class="it"><div><b>${esc(l.dominio)}</b><small>${esc(l.registrador)} · ${esc(l.depto)} · ${esc(l.responsable)}</small></div><div>${l.pago==='Pendiente'?'<span class="chip wn">Pago pendiente</span> ':''}${l.renueva!=='Sí'&&d!==null&&d<=60?'<span class="chip er">Sin renovación automática</span>':''}</div></div>`}).join('')||'<small>Todo en orden: sin pagos pendientes ni riesgos de vencimiento.</small>'}
+function tabla(){const L=filtrar(vals($('#tf')));
+ $('#tb').innerHTML=L.map(l=>{const e=estado(l),d=dias(l);
+  return`<tr><td><b>${esc(l.dominio)}</b><small>${esc(l.dns)}</small></td><td>${esc(l.registrador)}<small>${esc(l.depto)}</small></td><td>${l.cantidad}</td>
+  <td class="r">${money(tot(l))}<small>${money(l.costo)} c/u</small></td><td>${fd(l.vence)}<small>${d===null?'':d<0?'hace '+(-d)+' d':'en '+d+' d'}</small></td>
+  <td><span class="chip ${CL[l.pago]}">${esc(l.pago)}</span></td><td>${esc(l.renueva)}</td><td><span class="chip ${CL[e]}">${e}</span></td>
+  <td class="act"><button data-e="${l.id}" title="Editar" aria-label="Editar">✎</button><button data-x="${l.id}" title="Eliminar" aria-label="Eliminar">🗑</button></td></tr>`}).join('')
+  ||'<tr><td colspan="9" class="empty">Sin resultados. Ajusta los filtros o agrega un dominio.</td></tr>';
+ $('#tc').textContent=`${L.length} de ${DATA.length} dominios · ${money(L.reduce((s,l)=>s+tot(l),0))}`}
+function conteo(){const L=filtrar(vals($('#rf')));$('#rn').textContent=`${L.length} dominios coinciden con los filtros · costo total ${money(L.reduce((s,l)=>s+tot(l),0))}`}
+
+/* ---------- Reportes ---------- */
+const COLS={dominio:['Dominio',l=>l.dominio],ext:['Ext.',ext],registrador:['Registrador',l=>l.registrador||''],dns:['DNS / Hosting',l=>l.dns||''],cantidad:['Cant.',l=>l.cantidad],costo:['Costo unit. (USD)',l=>money(l.costo)],total:['Costo total (USD)',l=>money(tot(l))],registro:['Registro',l=>fd(l.registro)],vence:['Vencimiento',l=>fd(l.vence)],dias:['Días rest.',l=>{const d=dias(l);return d===null?'—':d}],estado:['Estado',estado],pago:['Pago',l=>l.pago],renueva:['Renueva',l=>l.renueva],depto:['Depto.',l=>l.depto||''],responsable:['Responsable',l=>l.responsable||'']};
+const DEF=['dominio','registrador','cantidad','total','vence','dias','estado','pago','renueva'];
+$('#rc').innerHTML=Object.entries(COLS).map(([k,v])=>`<label><input type="checkbox" value="${k}" ${DEF.includes(k)?'checked':''}>${v[0]}</label>`).join('');
+const selCols=()=>$$('#rc input:checked').map(i=>i.value);
+function resumenFiltros(o){const p=[],N={registrador:'Registrador',depto:'Depto',estado:'Estado',pago:'Pago',renueva:'Renovación auto',ext:'Extensión'};
+ if(o.q)p.push('Búsqueda: '+o.q);Object.keys(N).forEach(k=>o[k]&&p.push(N[k]+': '+o[k]));
+ if(o.vDesde||o.vHasta)p.push('Vence: '+(o.vDesde?fd(o.vDesde):'…')+' a '+(o.vHasta?fd(o.vHasta):'…'));
+ if(o.rDesde||o.rHasta)p.push('Registro: '+(o.rDesde?fd(o.rDesde):'…')+' a '+(o.rHasta?fd(o.rHasta):'…'));return p.join('  |  ')||'Sin filtros (todos los dominios)'}
+function pdf(){
+ const o=vals($('#rf')),L=filtrar(o),cols=selCols();
+ if(!window.jspdf)return toast('No se cargó la librería PDF (revisa tu conexión).');
+ if(!L.length)return toast('No hay dominios con esos filtros.');if(!cols.length)return toast('Elige al menos una columna.');
+ const doc=new jspdf.jsPDF({orientation:$('#ro').value,unit:'pt',format:'a4'}),W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight();
+ doc.setFillColor(15,27,45);doc.rect(0,0,W,74,'F');doc.setTextColor(255);doc.setFont('helvetica','bold');doc.setFontSize(18);doc.text($('#rt').value||'Reporte de dominios',40,34);
+ doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(190,205,230);doc.text(doc.splitTextToSize(resumenFiltros(o),W-80),40,52);
+ doc.text('Generado: '+new Date().toLocaleString('es-MX'),W-40,34,{align:'right'});
+ const st=k=>L.filter(l=>estado(l)===k).length,kp=[['Dominios',L.length],['Costo total (USD)',money(L.reduce((s,l)=>s+tot(l),0))],['Por vencer (90 d)',st('Por vencer')],['Vencidos',st('Vencido')]],bw=(W-80-30)/4;
+ kp.forEach(([a,b],i)=>{const x=40+i*(bw+10);doc.setFillColor(243,246,251);doc.roundedRect(x,92,bw,48,6,6,'F');doc.setTextColor(100,116,139);doc.setFontSize(8);doc.text(a,x+10,108);doc.setTextColor(15,27,45);doc.setFont('helvetica','bold');doc.setFontSize(13);doc.text(String(b),x+10,128);doc.setFont('helvetica','normal')});
+ const rgb={'Vigente':[18,161,80],'Por vencer':[217,130,0],'Vencido':[217,58,58],'Sin fecha':[148,163,184],'Pagado':[18,161,80],'Pendiente':[217,130,0]};let x=40;
+ ESTADOS.forEach(e=>{const w=(W-80)*st(e)/L.length;if(w>0){doc.setFillColor(...rgb[e]);doc.rect(x,154,w,9,'F');x+=w}});
+ let lx=40;doc.setFontSize(8);ESTADOS.forEach(e=>{doc.setFillColor(...rgb[e]);doc.rect(lx,171,7,7,'F');doc.setTextColor(60,72,90);doc.text(`${e}: ${st(e)}`,lx+11,178);lx+=105});
+ const gk=$('#rg').value,groups={};L.forEach(l=>{const k=gk?(gk==='estado'?estado(l):gk==='ext'?ext(l):l[gk])||'Sin asignar':'';(groups[k]=groups[k]||[]).push(l)});
+ let y=196;const ci=[cols.indexOf('estado'),cols.indexOf('pago')];
+ Object.keys(groups).sort().forEach(k=>{const G=groups[k];
+  if(gk){if(y>H-110){doc.addPage();y=50}doc.setFont('helvetica','bold');doc.setFontSize(11);doc.setTextColor(15,27,45);doc.text(`${k}  (${G.length} · ${money(G.reduce((s,l)=>s+tot(l),0))})`,40,y);y+=8}
+  doc.autoTable({startY:y,margin:{left:40,right:40,top:50,bottom:40},head:[cols.map(c=>COLS[c][0])],body:G.map(l=>cols.map(c=>COLS[c][1](l))),
+   styles:{fontSize:8,cellPadding:4,textColor:[30,41,59]},headStyles:{fillColor:[14,143,138],textColor:255},alternateRowStyles:{fillColor:[246,248,252]},
+   didParseCell:d=>{if(d.section==='body'&&ci.includes(d.column.index)&&d.column.index>=0){const c=rgb[d.cell.raw];if(c){d.cell.styles.textColor=c;d.cell.styles.fontStyle='bold'}}}});
+  y=doc.lastAutoTable.finalY+(gk?22:10)});
+ if(!gk){doc.setFontSize(9);doc.setTextColor(15,27,45);doc.setFont('helvetica','bold');if(y>H-60){doc.addPage();y=50}doc.text(`Total: ${L.length} dominios · ${money(L.reduce((s,l)=>s+tot(l),0))}`,W-40,y+8,{align:'right'})}
+ const n=doc.internal.getNumberOfPages();for(let i=1;i<=n;i++){doc.setPage(i);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(120,134,155);doc.text('Gestión de dominios · montos en USD',40,H-18);doc.text(`Página ${i} de ${n}`,W-40,H-18,{align:'right'})}
+ doc.save('reporte-dominios-'+iso(new Date())+'.pdf')}
+function csv(){const L=filtrar(vals($('#rf'))),cols=selCols();if(!L.length||!cols.length)return toast('Nada que exportar.');
+ const q=v=>'"'+String(v).replace(/"/g,'""')+'"';
+ const t=[cols.map(c=>q(COLS[c][0])).join(',')].concat(L.map(l=>cols.map(c=>q(COLS[c][1](l))).join(','))).join('\r\n');
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+t],{type:'text/csv;charset=utf-8'}));a.download='dominios-'+iso(new Date())+'.csv';a.click()}
+
+/* ---------- Eventos ---------- */
+mkF($('#tf'),false);mkF($('#rf'),true);
+$$('nav button').forEach(b=>b.onclick=()=>{$$('nav button').forEach(x=>x.classList.toggle('on',x===b));$$('.view').forEach(v=>v.classList.toggle('on',v.id===b.dataset.v))});
+$('#tf').addEventListener('input',tabla);$('#rf').addEventListener('input',conteo);
+$$('[data-p]').forEach(b=>b.onclick=()=>{const f=$('#rf'),s=n=>f.querySelector(`[name=${n}]`),p=b.dataset.p;
+ if(p==='x')$$('[name]',f).forEach(i=>{if(i.name!=='orden')i.value=''});
+ else if(p==='pend')s('pago').value='Pendiente';
+ else{s('vDesde').value='';s('vHasta').value='';if(p==='-1')s('vHasta').value=add(-1);else{s('vDesde').value=add(0);s('vHasta').value=add(+p)}}
+ conteo()});
+$('#pdf').onclick=pdf;$('#csv').onclick=csv;
+const dl=$('#dl'),fm=$('#fm');
+function abrir(l){editId=l?l.id:null;$('#dt').textContent=l?'Editar dominio':'Nuevo dominio';fm.reset();
+ if(l)$$('[name]',fm).forEach(i=>i.value=l[i.name]??'');dl.showModal()}
+$('#new').onclick=()=>abrir();$('#cx').onclick=()=>dl.close();
+fm.onsubmit=async e=>{e.preventDefault();const d=vals(fm);d.dominio=d.dominio.trim().toLowerCase();if(!d.dominio)return;if(editId)d.id=editId;
+ const b=$('#sv');b.disabled=true;b.textContent='Guardando…';
+ try{await call(editId?'update':'create',d);dl.close();toast('Dominio guardado');await load()}catch(er){toast('Error: '+er.message)}
+ b.disabled=false;b.textContent='Guardar'};
+$('#tb').onclick=async e=>{const b=e.target.closest('button');if(!b)return;
+ if(b.dataset.e)abrir(DATA.find(l=>l.id===b.dataset.e));
+ if(b.dataset.x&&confirm('¿Eliminar este dominio? No se puede deshacer.')){try{await call('delete',{id:b.dataset.x});toast('Dominio eliminado');await load()}catch(er){toast('Error: '+er.message)}}};
+const ds=$('#ds');$('#cfg').onclick=()=>{$('#au').value=API();ds.showModal()};$('#cx2').onclick=()=>ds.close();
+$('#sa').onclick=()=>{const v=$('#au').value.trim();v?localStorage.setItem('dom_api',v):localStorage.removeItem('dom_api');location.reload()};
+const sy=$('#sync');if(API()){sy.classList.add('live');sy.lastChild.textContent='Google Sheets'}
+const setTheme=t=>{document.documentElement.dataset.theme=t;localStorage.setItem('dom_theme',t);$('#th').textContent=t==='dark'?'☀️':'🌙'};
+setTheme(localStorage.getItem('dom_theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));
+$('#th').onclick=()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark');
+load();
+</script>
+</body>
+</html>
